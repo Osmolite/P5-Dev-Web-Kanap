@@ -6,21 +6,24 @@ async function lireListeProduits() {
 }
 
 async function genererProduits() {
-    produits = await lireListeProduits();
+    const produits = await lireListeProduits();
 	for (let i = 0; i < produits.length; i++) {
-
 		const article = produits[i];
+
 		// Récupération de l'élément du DOM qui accueillera les fiches
 		const sectionFiches = document.querySelector(".items");
+
 		// Création d’une balise dédiée à un produit
         const lienElement = document.createElement("a");
         lienElement.href = `./product.html?id=${article._id}`;
 		const articleElement = document.createElement("article");
-		articleElement.dataset.id = article._id;
+
 		// Création des balises 
 		const imageElement = document.createElement("img");
 		imageElement.src = article.imageUrl;
+		imageElement.alt = article.altTxt;
 		const nomElement = document.createElement("h3");
+		nomElement.classList.add("productName");
 		nomElement.innerText = article.name;
 		const descriptionElement = document.createElement("p");
         descriptionElement.classList.add("productDescription");
@@ -32,7 +35,6 @@ async function genererProduits() {
 		articleElement.appendChild(imageElement);
 		articleElement.appendChild(nomElement);
 		articleElement.appendChild(descriptionElement);
-
 	}
 }
 
