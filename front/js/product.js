@@ -15,37 +15,29 @@ async function afficherProduitCourant() {
     imageElement.src = produitCourant.imageUrl;
     imageElement.alt = produitCourant.altTxt;
     item_imgElement.appendChild(imageElement);
-
+    
     // Affichage du titre
     const titleElement = document.getElementById("title");
     titleElement.innerText = produitCourant.name;
-
-    // Affichage du titre
+    
+    // Affichage du prix
     const prixElement = document.getElementById("price");
     prixElement.innerText = produitCourant.price;
-
-    // Création d’une balise dédiée à un produit
-    // const lienElement = document.createElement("a");
-    // lienElement.href = `./product.html?id=${article._id}`;
-    // const articleElement = document.createElement("article");
     
-    // Création des balises 
-    // const imageElement = document.createElement("img");
-    // imageElement.src = article.imageUrl;
-    // imageElement.alt = article.altTxt;
-    // const nomElement = document.createElement("h3");
-    // nomElement.classList.add("productName");
-    // nomElement.innerText = article.name;
-    // const descriptionElement = document.createElement("p");
-    // descriptionElement.classList.add("productDescription");
-    // descriptionElement.innerText = article.description ?? "Pas de description pour le moment.";
+    // Affichage de la description
+    const descriptionElement = document.getElementById("description");
+    descriptionElement.innerText = produitCourant.description;
     
-    // On rattache la balise article a la section Fiches
-    // sectionFiches.appendChild(lienElement);
-    // lienElement.appendChild(articleElement);
+    // Affichage des choix de couleur
+    const colorElement = document.getElementById("colors");   
+    const colors = produitCourant.colors;
+    for (const color of colors) {
+        const option = document.createElement("option");
+        option.text= color;
+        option.value=color;
+        colorElement.appendChild(option);
+    }
+        
+    }
     
-    // articleElement.appendChild(nomElement);
-    // articleElement.appendChild(descriptionElement);
-}
-
-afficherProduitCourant();
+    afficherProduitCourant();
