@@ -46,10 +46,22 @@ function recupererProduit() {
     const color= document.getElementById("colors").value;
     const quantity= document.getElementById("quantity").value;
     produit={"id":id,"couleur":color,"quantite":quantity};
-    const produitsPanier= [produit];
+    return produit
+}
+
+function ajouterProduitPanier(produit) {
+    const panier = localStorage.getItem("Panier");
+    const produitsPanier = JSON.parse(panier);
+    produitsPanier.push(produit);
+    console.log(produitsPanier);
+    return produitsPanier
+}
+
+function stockageProduit() {
+    produit = recupererProduit();
+    const produitsPanier = ajouterProduitPanier(produit);
     const panier = JSON.stringify(produitsPanier);
     localStorage.setItem("Panier", panier);
-    console.log(id,color,quantity);
 }
 
 afficherProduitCourant();
@@ -58,8 +70,5 @@ const boutonPanier = document.getElementById("addToCart");
 
 boutonPanier.addEventListener(
     "click", 
-    recupererProduit
-    // function () {
-    //     recupererProduit()
-    // }
+    stockageProduit
     );
