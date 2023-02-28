@@ -37,7 +37,29 @@ async function afficherProduitCourant() {
         option.value=color;
         colorElement.appendChild(option);
     }
-        
-    }
     
-    afficherProduitCourant();
+}
+
+function recupererProduit() {
+    const url= new URL(window.location.href);
+    const id= url.searchParams.get("id"); 
+    const color= document.getElementById("colors").value;
+    const quantity= document.getElementById("quantity").value;
+    produit={"id":id,"couleur":color,"quantite":quantity};
+    const produitsPanier= [produit];
+    const panier = JSON.stringify(produitsPanier);
+    localStorage.setItem("Panier", panier);
+    console.log(id,color,quantity);
+}
+
+afficherProduitCourant();
+
+const boutonPanier = document.getElementById("addToCart");
+
+boutonPanier.addEventListener(
+    "click", 
+    recupererProduit
+    // function () {
+    //     recupererProduit()
+    // }
+    );
