@@ -49,7 +49,7 @@ function recupererProduit() {
     return produit
 }
 
-function ajouterProduitPanier(produit) {
+function ajouterOuIncrementerProduit(produit) {
     const panier = localStorage.getItem("Panier");
     const produitsPanier = JSON.parse(panier);
     produitsPanier.push(produit);
@@ -57,11 +57,15 @@ function ajouterProduitPanier(produit) {
     return produitsPanier
 }
 
-function stockageProduit() {
-    produit = recupererProduit();
-    const produitsPanier = ajouterProduitPanier(produit);
+function enregistrerPanier(produitsPanier) {
     const panier = JSON.stringify(produitsPanier);
     localStorage.setItem("Panier", panier);
+}
+
+function ajouterAuPanier() {
+    const produit = recupererProduit();
+    const produitsPanier = ajouterOuIncrementerProduit(produit);
+    enregistrerPanier(produitsPanier);
 }
 
 afficherProduitCourant();
@@ -70,5 +74,5 @@ const boutonPanier = document.getElementById("addToCart");
 
 boutonPanier.addEventListener(
     "click", 
-    stockageProduit
+    ajouterAuPanier
     );
