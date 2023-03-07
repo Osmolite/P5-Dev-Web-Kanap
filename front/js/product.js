@@ -51,9 +51,21 @@ function recupererProduit() {
 
 function ajouterOuIncrementerProduit(produit) {
     const panier = localStorage.getItem("Panier");
-    const produitsPanier = JSON.parse(panier);
-    produitsPanier.push(produit);
-    console.log(produitsPanier);
+    const produitsPanier = JSON.parse(panier) ?? [];
+    let produitDejaExistant = false;
+    for (const produitDansPanier of produitsPanier) {
+        console.log(produitsPanier);
+        const quantiteNumeriqueProduit = parseInt(produit.quantite,10);
+        const quantiteNumeriqueProduitPanier = parseInt(produitDansPanier.quantite,10);
+        if (produit.couleur===produitDansPanier.couleur && produit.id===produitDansPanier.id){
+            produitDansPanier.quantite = quantiteNumeriqueProduit + quantiteNumeriqueProduitPanier;
+            produitDejaExistant = true;
+            break;
+        }
+    }
+    if (!produitDejaExistant) {
+        produitsPanier.push(produit);
+    }
     return produitsPanier
 }
 
