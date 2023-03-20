@@ -44,7 +44,25 @@ async function genererProduits() {
         const prixProduit = document.createElement("p");
         prixProduit.innerText = `${infoProduit.price} €`;
         
-		// // Création d’une balise dédiée à un produit
+        const divSettings= document.createElement("div");
+        divSettings.classList.add("cart__item__content__settings");
+        const divQuantity= document.createElement("div");
+        divQuantity.classList.add("cart__item__content__settings__quantity");
+		const libelleQuantiteProduit = document.createElement("p");
+        libelleQuantiteProduit.innerText = "Qté : ";
+        const quantiteProduit = document.createElement("input");
+        quantiteProduit.classList.add("itemQuantity");
+        quantiteProduit.type = "number";
+        quantiteProduit.name = "itemQuantity";
+        quantiteProduit.min = 1;
+        quantiteProduit.max = 100;
+        quantiteProduit.value = article.quantite;
+
+        const divDelete= document.createElement("div");
+        divDelete.classList.add("cart__item__content__settings__delete");
+        const suppressionProduit = document.createElement("p");
+        suppressionProduit.innerText = "Supprimer";
+        // // Création d’une balise dédiée à un produit
         // const lienElement = document.createElement("a");
         // lienElement.href = `./product.html?id=${article._id}`;
 		// const articleElement = document.createElement("article");
@@ -69,6 +87,13 @@ async function genererProduits() {
         divDescription.appendChild(nomProduit);
         divDescription.appendChild(couleurProduit);
         divDescription.appendChild(prixProduit);
+        articleItem.appendChild(divSettings);
+        divSettings.appendChild(divQuantity);
+        divQuantity.appendChild(libelleQuantiteProduit);
+        divQuantity.appendChild(quantiteProduit);
+        divSettings.appendChild(divDelete);
+        divDelete.appendChild(suppressionProduit);
+
 	}
 }
 genererProduits();
