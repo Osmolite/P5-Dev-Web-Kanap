@@ -14,7 +14,8 @@ async function recupererInfosProduit(articleId) {
 async function genererProduits() {
     const produits = recupererPanier();
     const sectionItems = document.getElementById("cart__items");
-    
+    let totalPrix = 0;
+    let totalQuantite = 0;
 	for (let i = 0; i < produits.length; i++) {
 		const article = produits[i];
         const infoProduit = await recupererInfosProduit(article.id);
@@ -94,6 +95,11 @@ async function genererProduits() {
         divSettings.appendChild(divDelete);
         divDelete.appendChild(suppressionProduit);
 
+        totalPrix = totalPrix + infoProduit.price * article.quantite;
+        const quantiteNumeriqueProduit = parseInt(article.quantite,10);
+        totalQuantite = totalQuantite + quantiteNumeriqueProduit;
 	}
+    console.log("Le prix total est de " + totalPrix + " €");
+    console.log("Il y a " + totalQuantite + " articles dans le panier")
 }
 genererProduits();
