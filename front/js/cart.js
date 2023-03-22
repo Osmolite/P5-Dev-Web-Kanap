@@ -11,6 +11,18 @@ async function recupererInfosProduit(articleId) {
     return infoProduit;
 }
 
+function modifierQuantite(quantiteArticleCourant) {
+   const dataArticle= quantiteArticleCourant.closest('article');
+   console.log(dataArticle.getAttribute("data-id"),
+    dataArticle.getAttribute("data-color"),
+    this
+   );
+}
+
+function supprimerArticle() {
+
+}
+
 async function genererProduits() {
     const produits = recupererPanier();
     const sectionItems = document.getElementById("cart__items");
@@ -58,11 +70,18 @@ async function genererProduits() {
         quantiteProduit.min = 1;
         quantiteProduit.max = 100;
         quantiteProduit.value = article.quantite;
+        quantiteProduit.addEventListener('change', function () {
+            console.log(`La quantité est ${this.value}`)
+            modifierQuantite(this);
+        });
 
         const divDelete= document.createElement("div");
         divDelete.classList.add("cart__item__content__settings__delete");
         const suppressionProduit = document.createElement("p");
         suppressionProduit.innerText = "Supprimer";
+        suppressionProduit.addEventListener('click', function () {
+            console.log("élément supprimé")
+        });
 
 		// On rattache les sous-elements a la section article
         sectionItems.appendChild(articleItem);
@@ -88,7 +107,7 @@ async function genererProduits() {
     const totalQuantity = document.getElementById("totalQuantity");
     totalQuantity.innerText = totalQuantite;
     const totalPrice = document.getElementById("totalPrice");
-    totalPrice.innerText = totalPrix;
+    totalPrice.innerText = totalPrix.toLocaleString('fr-FR');
     // console.log("Le prix total est de " + totalPrix + " €");
     // console.log("Il y a " + totalQuantite + " articles dans le panier")
 }
