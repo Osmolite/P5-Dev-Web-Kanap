@@ -15,7 +15,7 @@ function modifierQuantite(quantiteArticleCourant) {
    const dataArticle= quantiteArticleCourant.closest('article');
    console.log(dataArticle.getAttribute("data-id"),
     dataArticle.getAttribute("data-color"),
-    this
+    quantiteArticleCourant.value
    );
 }
 
