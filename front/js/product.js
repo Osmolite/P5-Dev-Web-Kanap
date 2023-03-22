@@ -49,6 +49,11 @@ function recupererProduit() {
     return produit
 }
 
+function verifierQuantiteAffichee() {
+    if (document.getElementById("quantity").value > 100){
+        document.getElementById("quantity").value = 100;
+    }
+}
 function ajouterOuIncrementerProduit(produit) {
     const panier = localStorage.getItem("Panier");
     const produitsPanier = JSON.parse(panier) ?? [];
@@ -58,7 +63,10 @@ function ajouterOuIncrementerProduit(produit) {
         const quantiteNumeriqueProduit = parseInt(produit.quantite,10);
         const quantiteNumeriqueProduitPanier = parseInt(produitDansPanier.quantite,10);
         if (produit.couleur===produitDansPanier.couleur && produit.id===produitDansPanier.id){
-            produitDansPanier.quantite = quantiteNumeriqueProduit + quantiteNumeriqueProduitPanier;
+            produitDansPanier.quantite = Math.min(
+                quantiteNumeriqueProduit + quantiteNumeriqueProduitPanier,
+                100
+            );
             produitDejaExistant = true;
             break;
         }
@@ -75,9 +83,11 @@ function enregistrerPanier(produitsPanier) {
 }
 
 function ajouterAuPanier() {
+    verifierQuantiteAffichee();
     const produit = recupererProduit();
     const produitsPanier = ajouterOuIncrementerProduit(produit);
     enregistrerPanier(produitsPanier);
+    
 }
 
 afficherProduitCourant();
