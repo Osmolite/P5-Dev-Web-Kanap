@@ -63,23 +63,8 @@ async function genererProduits() {
         divDelete.classList.add("cart__item__content__settings__delete");
         const suppressionProduit = document.createElement("p");
         suppressionProduit.innerText = "Supprimer";
-        // // Création d’une balise dédiée à un produit
-        // const lienElement = document.createElement("a");
-        // lienElement.href = `./product.html?id=${article._id}`;
-		// const articleElement = document.createElement("article");
 
-		// // Création des balises 
-		// const imageElement = document.createElement("img");
-		// imageElement.src = article.imageUrl;
-		// imageElement.alt = article.altTxt;
-		// const nomElement = document.createElement("h3");
-		// nomElement.classList.add("productName");
-		// nomElement.innerText = article.name;
-		// const descriptionElement = document.createElement("p");
-        // descriptionElement.classList.add("productDescription");
-		// descriptionElement.innerText = article.description ?? "Pas de description pour le moment.";
-
-		// On rattache la balise article a la section Fiches
+		// On rattache les sous-elements a la section article
         sectionItems.appendChild(articleItem);
         articleItem.appendChild(divImg);
 		divImg.appendChild(imageCanape);
@@ -99,7 +84,12 @@ async function genererProduits() {
         const quantiteNumeriqueProduit = parseInt(article.quantite,10);
         totalQuantite = totalQuantite + quantiteNumeriqueProduit;
 	}
-    console.log("Le prix total est de " + totalPrix + " €");
-    console.log("Il y a " + totalQuantite + " articles dans le panier")
+
+    const totalQuantity = document.getElementById("totalQuantity");
+    totalQuantity.innerText = totalQuantite;
+    const totalPrice = document.getElementById("totalPrice");
+    totalPrice.innerText = totalPrix;
+    // console.log("Le prix total est de " + totalPrix + " €");
+    // console.log("Il y a " + totalQuantite + " articles dans le panier")
 }
 genererProduits();
