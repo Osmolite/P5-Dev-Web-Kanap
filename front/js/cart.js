@@ -21,9 +21,20 @@ function verifierQuantiteModifiee(quantiteArticleCourant) {
     }
 }
 
+function mettreAJourQuantiteTotale(ancienneQuantite, nouvelleQuantite) {
+    quantiteTotale = document.getElementById("totalQuantity");
+    const nouveauTotalQuantite = parseInt(quantiteTotale.innerText,10) - parseInt(ancienneQuantite,10) + parseInt(nouvelleQuantite,10);
+    console.log(nouveauTotalQuantite);
+    quantiteTotale.innerText = nouveauTotalQuantite;
+}
+
+function mettreAJourPrixTotal(ancienneQuantite, nouvelleQuantite) {
+
+}
 function modifierQuantite(quantiteArticleCourant) {
     const dataArticle= quantiteArticleCourant.closest('article');
     const produitsPanier = recupererPanier();
+    let ancienneQuantite = 0;
     console.log(dataArticle.getAttribute("data-id"),
     dataArticle.getAttribute("data-color"),
     quantiteArticleCourant.value
@@ -31,11 +42,13 @@ function modifierQuantite(quantiteArticleCourant) {
     for (const produitDansPanier of produitsPanier) {
         if (dataArticle.getAttribute("data-color")===produitDansPanier.couleur
         && dataArticle.getAttribute("data-id")===produitDansPanier.id){
-            produitDansPanier.quantite = Math.min(quantiteArticleCourant.value,100);
+            ancienneQuantite = produitDansPanier.quantite;
+            produitDansPanier.quantite = Math.min(quantiteArticleCourant.value,100); 
             break;
         }
     }
     enregistrerPanier(produitsPanier);
+    mettreAJourQuantiteTotale(ancienneQuantite, quantiteArticleCourant.value)
 }
 
 function supprimerArticle() {
