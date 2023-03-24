@@ -21,16 +21,20 @@ function verifierQuantiteModifiee(quantiteArticleCourant) {
     }
 }
 
-function mettreAJourQuantiteTotale(ancienneQuantite, nouvelleQuantite) {
+async function mettreAJourTotaux(ancienneQuantite, nouvelleQuantite, articleId) {
     quantiteTotale = document.getElementById("totalQuantity");
-    const nouveauTotalQuantite = parseInt(quantiteTotale.innerText,10) - parseInt(ancienneQuantite,10) + parseInt(nouvelleQuantite,10);
-    console.log(nouveauTotalQuantite);
+    const variationQuantite = parseInt(nouvelleQuantite,10) - parseInt(ancienneQuantite,10)
+    const nouveauTotalQuantite = parseInt(quantiteTotale.innerText,10) + variationQuantite;
     quantiteTotale.innerText = nouveauTotalQuantite;
+    const infoProduit = await recupererInfosProduit(articleId);
+    console.log(infoProduit);
+    const differencePrix = infoProduit.price * variationQuantite;
+    prixTotal = document.getElementById("totalPrice");
+    console.log(parseInt(prixTotal.innerText,10),differencePrix);
+    prixTotal.innerText = parseInt(prixTotal.innerText,10) + differencePrix;
+    console.log(prixTotal.innerText);
 }
 
-function mettreAJourPrixTotal(ancienneQuantite, nouvelleQuantite) {
-
-}
 function modifierQuantite(quantiteArticleCourant) {
     const dataArticle= quantiteArticleCourant.closest('article');
     const produitsPanier = recupererPanier();
@@ -48,7 +52,7 @@ function modifierQuantite(quantiteArticleCourant) {
         }
     }
     enregistrerPanier(produitsPanier);
-    mettreAJourQuantiteTotale(ancienneQuantite, quantiteArticleCourant.value)
+    mettreAJourTotaux(ancienneQuantite, quantiteArticleCourant.value,dataArticle.getAttribute("data-id"))
 }
 
 function supprimerArticle() {
@@ -138,6 +142,6 @@ async function genererProduits() {
     const totalQuantity = document.getElementById("totalQuantity");
     totalQuantity.innerText = totalQuantite;
     const totalPrice = document.getElementById("totalPrice");
-    totalPrice.innerText = totalPrix.toLocaleString('fr-FR');
+    totalPrice.innerText = totalPrix; //.toLocaleString('fr-FR');
 }
 genererProduits();
