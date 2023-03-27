@@ -1,11 +1,13 @@
 
 async function lireListeProduits() {
+	//Récupération des données dans l'API
     const reponse = await fetch("http://localhost:3000/api/products");
     const produits = await reponse.json();
     return produits
 }
 
 async function genererProduits() {
+	//Création des fiches produits
     const produits = await lireListeProduits();
 	for (let i = 0; i < produits.length; i++) {
 		const article = produits[i];
@@ -29,7 +31,7 @@ async function genererProduits() {
         descriptionElement.classList.add("productDescription");
 		descriptionElement.innerText = article.description ?? "Pas de description pour le moment.";
 
-		// On rattache la balise article a la section Fiches
+		// On rattache les balises à la section Fiches
         sectionFiches.appendChild(lienElement);
         lienElement.appendChild(articleElement);
 		articleElement.appendChild(imageElement);

@@ -1,41 +1,48 @@
 function recupererPanier() {
+    //Récupération des produits dans le localStorage
     const panier = localStorage.getItem("Panier");
-    const produitsPanier = JSON.parse(panier) ?? [];
+    const produitsPanier = JSON.parse(panier) ?? []; //Si le panier est vide on renvoie un tableau vide
     return produitsPanier;
 }
 
 async function recupererInfosProduit(articleId) {
+    //Récupération des informations sur un produit grâce à l'Id dans l'API
     const reponse = await fetch(`http://localhost:3000/api/products/${articleId}`);
     const infoProduit = await reponse.json();
     return infoProduit;
 }
 
 function enregistrerPanier(produitsPanier) {
+    //Envoie du panier dans le localStorage
     const panier = JSON.stringify(produitsPanier);
     localStorage.setItem("Panier", panier);
 }
 
 function verifierQuantiteModifiee(quantiteArticleCourant) {
+    //Limitation de la quantité du produit à 100 si jamais on souhaite modifier la quantité
     if (quantiteArticleCourant.value > 100){
         quantiteArticleCourant.value = 100;
     }
 }
 
 async function mettreAJourTotaux(ancienneQuantite, nouvelleQuantite, articleId) {
+    //Total d'articles et Prix total sont recalculés puis réaffichés
     quantiteTotale = document.getElementById("totalQuantity");
+    //Recalcul de la quantité en passant toutes les valeurs en entier
     const variationQuantite = parseInt(nouvelleQuantite,10) - parseInt(ancienneQuantite,10)
     const nouveauTotalQuantite = parseInt(quantiteTotale.innerText,10) + variationQuantite;
     quantiteTotale.innerText = nouveauTotalQuantite;
+    //Récupération des informations du produit ajouté grâce à l'Id
     const infoProduit = await recupererInfosProduit(articleId);
-    console.log(infoProduit);
+    //Recalcul du prix en fonction du prix et de la variation de quantité du produit modifié
     const differencePrix = infoProduit.price * variationQuantite;
     prixTotal = document.getElementById("totalPrice");
-    console.log(parseInt(prixTotal.innerText,10),differencePrix);
     prixTotal.innerText = parseInt(prixTotal.innerText,10) + differencePrix;
-    console.log(prixTotal.innerText);
 }
 
 function modifierQuantite(quantiteArticleCourant) {
+    //Modification de la quantité d'un produit dans le localStorage
+    //Récupération de l'Id et de la couleur en remontant à la balise article
     const dataArticle= quantiteArticleCourant.closest('article');
     const produitsPanier = recupererPanier();
     let ancienneQuantite = 0;
@@ -43,6 +50,7 @@ function modifierQuantite(quantiteArticleCourant) {
     dataArticle.getAttribute("data-color"),
     quantiteArticleCourant.value
     );
+    //Parcours du panier à la recherche de l'article que l'on souhaite modifier
     for (const produitDansPanier of produitsPanier) {
         if (dataArticle.getAttribute("data-color")===produitDansPanier.couleur
         && dataArticle.getAttribute("data-id")===produitDansPanier.id){
@@ -60,10 +68,12 @@ function supprimerArticle() {
 }
 
 async function genererProduits() {
+    //Génère chaque ligne du panier avec chaque produit, son prix, la quantité et la couleur
     const produits = recupererPanier();
     const sectionItems = document.getElementById("cart__items");
     let totalPrix = 0;
     let totalQuantite = 0;
+    //Parcours du panier pour afficher chaque produit et ses informations
     for (let i = 0; i < produits.length; i++) {
         const article = produits[i];
         const infoProduit = await recupererInfosProduit(article.id);
@@ -105,6 +115,7 @@ async function genererProduits() {
         quantiteProduit.min = 1;
         quantiteProduit.max = 100;
         quantiteProduit.value = article.quantite;
+        //Evenement permettant de modifier la quantité d'un produit
         quantiteProduit.addEventListener('change', function () {
             verifierQuantiteModifiee(this);
             modifierQuantite(this);
@@ -114,6 +125,7 @@ async function genererProduits() {
         divDelete.classList.add("cart__item__content__settings__delete");
         const suppressionProduit = document.createElement("p");
         suppressionProduit.innerText = "Supprimer";
+        //Evenement permettant de supprimer un produit du panier
         suppressionProduit.addEventListener('click', function () {
             console.log("élément supprimé")
         });

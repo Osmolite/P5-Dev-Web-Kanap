@@ -1,6 +1,8 @@
 async function lireProduitCourant() {
+    //Récupération de l'Id du produit à afficher
     const url= new URL(window.location.href);
-    const id= url.searchParams.get("id");    
+    const id= url.searchParams.get("id");
+    //Récupération des informations du produit à afficher dans l'API    
     const reponse = await fetch(`http://localhost:3000/api/products/${id}`);
     const produitCourant = await reponse.json();
     return produitCourant
@@ -28,7 +30,7 @@ async function afficherProduitCourant() {
     const descriptionElement = document.getElementById("description");
     descriptionElement.innerText = produitCourant.description;
     
-    // Affichage des choix de couleur
+    // Affichage des choix de couleurs
     const colorElement = document.getElementById("colors");   
     const colors = produitCourant.colors;
     for (const color of colors) {
@@ -41,6 +43,7 @@ async function afficherProduitCourant() {
 }
 
 function recupererProduit() {
+    //Récupération des informations nécessaire pour l'affichage dans le panier
     const url= new URL(window.location.href);
     const id= url.searchParams.get("id"); 
     const color= document.getElementById("colors").value;
@@ -50,14 +53,17 @@ function recupererProduit() {
 }
 
 function verifierQuantiteAffichee() {
+    //Limitation de la quantité du produit à 100 sur l'affichage de la page produit
     if (document.getElementById("quantity").value > 100){
         document.getElementById("quantity").value = 100;
     }
 }
 function ajouterOuIncrementerProduit(produit) {
+    //Ajout du nouveau produit ou incrémentation de la quantité (Max 100) du produit déjà existant dans le panier
     const panier = localStorage.getItem("Panier");
     const produitsPanier = JSON.parse(panier) ?? [];
     let produitDejaExistant = false;
+    //Parcours du tableau panier à la recherche du produit qu'on souhaite ajouter
     for (const produitDansPanier of produitsPanier) {
         console.log(produitsPanier);
         const quantiteNumeriqueProduit = parseInt(produit.quantite,10);
@@ -71,6 +77,7 @@ function ajouterOuIncrementerProduit(produit) {
             break;
         }
     }
+    //Le produit n'est pas présent dans le panier, on l'ajoute donc
     if (!produitDejaExistant) {
         produitsPanier.push(produit);
     }
@@ -78,22 +85,24 @@ function ajouterOuIncrementerProduit(produit) {
 }
 
 function enregistrerPanier(produitsPanier) {
+    //Envoie du panier dans le localStorage
     const panier = JSON.stringify(produitsPanier);
     localStorage.setItem("Panier", panier);
 }
 
 function ajouterAuPanier() {
+    //Fonction globale qui fait appelle à toutes les autres pour mettre à jour le panier avec le produit désiré
     verifierQuantiteAffichee();
     const produit = recupererProduit();
     const produitsPanier = ajouterOuIncrementerProduit(produit);
     enregistrerPanier(produitsPanier);
     
 }
-
+//Affichage du produit
 afficherProduitCourant();
 
 const boutonPanier = document.getElementById("addToCart");
-
+//Evenement pour déclencher l'ajout au panier
 boutonPanier.addEventListener(
     "click", 
     ajouterAuPanier
