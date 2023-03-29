@@ -68,18 +68,12 @@ function supprimerArticle(lienSupprimer) {
     const dataArticle= lienSupprimer.closest('article');
     const produitsPanier = recupererPanier();
     let ancienneQuantite = 0;
-    // console.log(dataArticle.getAttribute("data-id"),
-    // dataArticle.getAttribute("data-color"),
-    // quantiteArticleCourant.value
-    // );
     //Parcours du panier à la recherche de l'article que l'on souhaite modifier
     let indiceProduitASupprimer = -1;
     for (const produitIndice in produitsPanier) {
         const produitDansPanier = produitsPanier[produitIndice]; 
         if (dataArticle.getAttribute("data-color")===produitDansPanier.couleur
         && dataArticle.getAttribute("data-id")===produitDansPanier.id){
-            console.log(produitDansPanier);
-            console.log(produitIndice);
             indiceProduitASupprimer = produitIndice;
             ancienneQuantite = produitDansPanier.quantite; 
             break;
@@ -88,6 +82,7 @@ function supprimerArticle(lienSupprimer) {
     }
     if (indiceProduitASupprimer>=0) {
         produitsPanier.splice(indiceProduitASupprimer,1);
+        dataArticle.remove();
     }
     enregistrerPanier(produitsPanier);
     mettreAJourTotaux(ancienneQuantite, 0,dataArticle.getAttribute("data-id"))
