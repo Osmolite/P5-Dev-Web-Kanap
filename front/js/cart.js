@@ -63,8 +63,34 @@ function modifierQuantite(quantiteArticleCourant) {
     mettreAJourTotaux(ancienneQuantite, quantiteArticleCourant.value,dataArticle.getAttribute("data-id"))
 }
 
-function supprimerArticle() {
-    
+function supprimerArticle(lienSupprimer) {
+    //Récupération de l'Id et de la couleur en remontant à la balise article
+    const dataArticle= lienSupprimer.closest('article');
+    const produitsPanier = recupererPanier();
+    let ancienneQuantite = 0;
+    // console.log(dataArticle.getAttribute("data-id"),
+    // dataArticle.getAttribute("data-color"),
+    // quantiteArticleCourant.value
+    // );
+    //Parcours du panier à la recherche de l'article que l'on souhaite modifier
+    let indiceProduitASupprimer = -1;
+    for (const produitIndice in produitsPanier) {
+        const produitDansPanier = produitsPanier[produitIndice]; 
+        if (dataArticle.getAttribute("data-color")===produitDansPanier.couleur
+        && dataArticle.getAttribute("data-id")===produitDansPanier.id){
+            console.log(produitDansPanier);
+            console.log(produitIndice);
+            indiceProduitASupprimer = produitIndice;
+            ancienneQuantite = produitDansPanier.quantite; 
+            break;
+        }
+        
+    }
+    if (indiceProduitASupprimer>=0) {
+        produitsPanier.splice(indiceProduitASupprimer,1);
+    }
+    enregistrerPanier(produitsPanier);
+    mettreAJourTotaux(ancienneQuantite, 0,dataArticle.getAttribute("data-id"))
 }
 
 async function genererProduits() {
@@ -127,7 +153,7 @@ async function genererProduits() {
         suppressionProduit.innerText = "Supprimer";
         //Evenement permettant de supprimer un produit du panier
         suppressionProduit.addEventListener('click', function () {
-            console.log("élément supprimé")
+            supprimerArticle(this);
         });
         
         // On rattache les sous-elements a la section article
