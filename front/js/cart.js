@@ -177,4 +177,37 @@ async function genererProduits() {
     const totalPrice = document.getElementById("totalPrice");
     totalPrice.innerText = totalPrix; //.toLocaleString('fr-FR');
 }
+
+async function passerCommande() {
+    const contact = {
+        "firstName":"Mousse",
+        "lastName":"Arti",
+        "address":"les îles",
+        "city":"CockerCity",
+        "email":"Mousse@cocker.com"
+    };
+    const products = [
+        "107fb5b75607497b96722bda5b504926",
+        "415b7cacb65d43b2b5c1ff70f3393ad1",
+        "a557292fe5814ea2b15c6ef4bd73ed83"
+    ];
+    const data = {
+        "contact": contact,
+        "products": products
+    }
+    const reponse = await fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {'Content-Type': 'application/json;charset=utf-8'}, 
+        body: JSON.stringify(data)
+      })
+    const orderDetails= await reponse.json();
+    console.log(orderDetails.orderId);
+    window.location = `./confirmation.html?orderId=${orderDetails.orderId}`
+}
+
 genererProduits();
+
+const boutonCommander = document.getElementById("order");
+boutonCommander.addEventListener('click', function () {
+    passerCommande();
+});
