@@ -178,14 +178,48 @@ async function genererProduits() {
     totalPrice.innerText = totalPrix; //.toLocaleString('fr-FR');
 }
 
-async function passerCommande() {
+async function validerCommande() {
     const contact = {
-        "firstName":"Mousse",
-        "lastName":"Arti",
-        "address":"les îles",
-        "city":"CockerCity",
-        "email":"Mousse@cocker.com"
-    };
+    "firstName": document.getElementById("firstName").value,
+    "lastName": document.getElementById("lastName").value,
+    "address": document.getElementById("address").value,
+    "city": document.getElementById("city").value,
+    "email": document.getElementById("email").value
+    }
+
+    let filtreTexte = /^[a-zA-ZÀ-ÿ- ]{2,}$/;
+    let filtreEmail = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([_\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
+    let filtreAdresse = /^[A-Za-zÀ-ÿ0-9- ]{5,}$/;
+
+    let contactOk = true;
+
+    if(!filtreTexte.test(contact.firstName)){
+        document.getElementById("firstNameErrorMsg").innerText = "Le champ n'est pas valide";
+        contactOk = false;
+    }
+    if(!filtreTexte.test(contact.lastName)){
+        document.getElementById("lastNameErrorMsg").innerText = "Le champ n'est pas valide";
+        contactOk = false;
+    }
+    if(!filtreAdresse.test(contact.address)){
+        document.getElementById("addressErrorMsg").innerText = "L'adresse n'est pas valide";
+        contactOk = false;
+    }
+    if(!filtreTexte.test(contact.city)){
+        document.getElementById("cityErrorMsg").innerText = "Le champ n'est pas valide";
+        contactOk = false;
+    }
+    if(!filtreEmail.test(contact.email)){
+        document.getElementById("emailErrorMsg").innerText = "L'adresse email n'est pas valide";
+        contactOk = false;
+    }
+    console.log(contactOk);
+    if(contactOk) {
+        await passerCommande(contact);
+    }
+}
+
+async function passerCommande(contact) {
     const products = [
         "107fb5b75607497b96722bda5b504926",
         "415b7cacb65d43b2b5c1ff70f3393ad1",
@@ -195,6 +229,7 @@ async function passerCommande() {
         "contact": contact,
         "products": products
     }
+    console.log(data);
     const reponse = await fetch("http://localhost:3000/api/products/order", {
         method: "POST",
         headers: {'Content-Type': 'application/json;charset=utf-8'}, 
@@ -207,7 +242,8 @@ async function passerCommande() {
 
 genererProduits();
 
+document.getElementById("order").type = "button";
 const boutonCommander = document.getElementById("order");
 boutonCommander.addEventListener('click', function () {
-    passerCommande();
+    validerCommande();
 });
