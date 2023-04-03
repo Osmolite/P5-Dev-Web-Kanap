@@ -193,28 +193,38 @@ async function validerCommande() {
 
     let contactOk = true;
 
-    if(!filtreTexte.test(contact.firstName)){
+    if (!filtreTexte.test(contact.firstName)){
         document.getElementById("firstNameErrorMsg").innerText = "Le champ n'est pas valide";
         contactOk = false;
+    } else {
+        document.getElementById("firstNameErrorMsg").innerText = "";
     }
-    if(!filtreTexte.test(contact.lastName)){
+    if (!filtreTexte.test(contact.lastName)){
         document.getElementById("lastNameErrorMsg").innerText = "Le champ n'est pas valide";
         contactOk = false;
+    } else {
+        document.getElementById("lastNameErrorMsg").innerText = "";
     }
-    if(!filtreAdresse.test(contact.address)){
+    if (!filtreAdresse.test(contact.address)){
         document.getElementById("addressErrorMsg").innerText = "L'adresse n'est pas valide";
         contactOk = false;
+    } else {
+        document.getElementById("addressErrorMsg").innerText = "";
     }
-    if(!filtreTexte.test(contact.city)){
+    if (!filtreTexte.test(contact.city)){
         document.getElementById("cityErrorMsg").innerText = "Le champ n'est pas valide";
         contactOk = false;
+    } else {
+        document.getElementById("cityErrorMsg").innerText = "";
     }
-    if(!filtreEmail.test(contact.email)){
+    if (!filtreEmail.test(contact.email)){
         document.getElementById("emailErrorMsg").innerText = "L'adresse email n'est pas valide";
         contactOk = false;
+    } else {
+        document.getElementById("emailErrorMsg").innerText = "";
     }
     console.log(contactOk);
-    if(contactOk) {
+    if (contactOk) {
         await passerCommande(contact);
     }
 }
