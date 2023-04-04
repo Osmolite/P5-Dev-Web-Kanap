@@ -1,13 +1,19 @@
 
+/**
+ * Récupère les données de la liste de produits dans l'API
+ * @return { Promise }
+ * @return { Promise.resolve<Array> } produits - tableau des produits proposés à la vente
+ */
 async function lireListeProduits() {
-	//Récupération des données dans l'API
     const reponse = await fetch("http://localhost:3000/api/products");
     const produits = await reponse.json();
     return produits
 }
 
+/**
+ * Crée les fiches produits de la page d'accueil
+ */
 async function genererProduits() {
-	//Création des fiches produits
     const produits = await lireListeProduits();
 	for (let i = 0; i < produits.length; i++) {
 		const article = produits[i];

@@ -1,30 +1,52 @@
+/**
+ * Récupère le tableau des produits désirés dans le LocalStorage
+ * @return { Array } produitsPanier - Tableau de tous les produits mis dans le panier par l'utilisateur
+ */
 function recupererPanier() {
-    //Récupération des produits dans le localStorage
     const panier = localStorage.getItem("Panier");
-    const produitsPanier = JSON.parse(panier) ?? []; //Si le panier est vide on renvoie un tableau vide
+    const produitsPanier = JSON.parse(panier) ?? []; 
+    //Si le panier est vide on renvoie un tableau vide
     return produitsPanier;
 }
 
+/**
+ * Récupère les informations d'un produit dans l'API grâce à l'Id
+ * @param { String } articleId - Id du produit dont on souhaite récupérer les informations
+ * @return { Object } infoProduit - Objet contenant les informations sur le produit 
+ * dont l'Id est en paramètre
+ */
 async function recupererInfosProduit(articleId) {
-    //Récupération des informations sur un produit grâce à l'Id dans l'API
     const reponse = await fetch(`http://localhost:3000/api/products/${articleId}`);
     const infoProduit = await reponse.json();
     return infoProduit;
 }
 
+/**
+ * Envoie des informations du panier dans le LocalStorage
+ * @param { Array } produitsPanier - Tableau de tous les produits mis dans le panier par l'utilisateur
+ */
 function enregistrerPanier(produitsPanier) {
-    //Envoie du panier dans le localStorage
     const panier = JSON.stringify(produitsPanier);
     localStorage.setItem("Panier", panier);
 }
 
+/**
+ * Limite la quantité modifiée sur un article du panier à 100
+ * @param { Input.<Number> } quantiteArticleCourant - La nouvelle quantité désirée par l'utilisateur
+ */
 function verifierQuantiteModifiee(quantiteArticleCourant) {
-    //Limitation de la quantité du produit à 100 si jamais on souhaite modifier la quantité
     if (quantiteArticleCourant.value > 100){
         quantiteArticleCourant.value = 100;
     }
 }
 
+/**
+ * Recalcul à chaque modification du panier le prix total et le nombre d'articles total
+ * @param { (Integer | String | Number) } ancienneQuantite - Ancienne quantité du produit avant modification
+ * @param { (Integer | String | Number) } nouvelleQuantite - Nouvelle quantité du produit après modification
+ * de l'utilisateur
+ * @param { String } articleId - Id du produit qui est entrain d'être modifié dans le panier
+ */
 async function mettreAJourTotaux(ancienneQuantite, nouvelleQuantite, articleId) {
     //Total d'articles et Prix total sont recalculés puis réaffichés
     quantiteTotale = document.getElementById("totalQuantity");
@@ -40,8 +62,12 @@ async function mettreAJourTotaux(ancienneQuantite, nouvelleQuantite, articleId) 
     prixTotal.innerText = parseInt(prixTotal.innerText,10) + differencePrix;
 }
 
+/**
+ * Mis à jour de la quantité du produit modifié du panier dans le LocalStorage
+ * @param { Input.<Number> } quantiteArticleCourant - Nouvelle quantité du produit après modification 
+ * par l'utilisateur
+ */
 function modifierQuantite(quantiteArticleCourant) {
-    //Modification de la quantité d'un produit dans le localStorage
     //Récupération de l'Id et de la couleur en remontant à la balise article
     const dataArticle= quantiteArticleCourant.closest('article');
     const produitsPanier = recupererPanier();
@@ -63,6 +89,11 @@ function modifierQuantite(quantiteArticleCourant) {
     mettreAJourTotaux(ancienneQuantite, quantiteArticleCourant.value,dataArticle.getAttribute("data-id"))
 }
 
+/**
+ * Supprimer l'article souhaité dans le panier et le LocalStorage
+ * @param { HTMLParagraphElement } lienSupprimer - Lien qui déclenche l'appel de 
+ * la fonction lorsqu'on clique dessus
+ */
 function supprimerArticle(lienSupprimer) {
     //Récupération de l'Id et de la couleur en remontant à la balise article
     const dataArticle= lienSupprimer.closest('article');
@@ -88,8 +119,10 @@ function supprimerArticle(lienSupprimer) {
     mettreAJourTotaux(ancienneQuantite, 0,dataArticle.getAttribute("data-id"))
 }
 
+/**
+ * Génère l'affichage de produits du panier et des totaux
+ */
 async function genererProduits() {
-    //Génère chaque ligne du panier avec chaque produit, son prix, la quantité et la couleur
     const produits = recupererPanier();
     const sectionItems = document.getElementById("cart__items");
     let totalPrix = 0;
@@ -175,9 +208,13 @@ async function genererProduits() {
     const totalQuantity = document.getElementById("totalQuantity");
     totalQuantity.innerText = totalQuantite;
     const totalPrice = document.getElementById("totalPrice");
-    totalPrice.innerText = totalPrix; //.toLocaleString('fr-FR');
+    totalPrice.innerText = totalPrix;
 }
 
+/**
+ * Vérifie l'exactitude des données du formulaire de commande puis appel la fonction 
+ * passerCommande si le formulaire est juste
+ */
 async function validerCommande() {
     const contact = {
     "firstName": document.getElementById("firstName").value,
@@ -186,7 +223,7 @@ async function validerCommande() {
     "city": document.getElementById("city").value,
     "email": document.getElementById("email").value
     }
-
+    //Utilisation d'expressions Regex pour filtrer le formulaire
     let filtreTexte = /^[a-zA-ZÀ-ÿ- ]{2,}$/;
     let filtreEmail = /^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([_\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$/;
     let filtreAdresse = /^[A-Za-zÀ-ÿ0-9- ]{5,}$/;
@@ -229,12 +266,17 @@ async function validerCommande() {
     }
 }
 
+/**
+ * Renvoie le numéro de commande et redirige l'utilisateur sur la page confirmation
+ * @param { Object } contact - Object contenant toutes les informations du formulaire de commande
+ */
 async function passerCommande(contact) {
-    const products = [
-        "107fb5b75607497b96722bda5b504926",
-        "415b7cacb65d43b2b5c1ff70f3393ad1",
-        "a557292fe5814ea2b15c6ef4bd73ed83"
-    ];
+    const products = recupererListeIdsPanier();
+    // const products = [
+    //     "107fb5b75607497b96722bda5b504926",
+    //     "415b7cacb65d43b2b5c1ff70f3393ad1",
+    //     "a557292fe5814ea2b15c6ef4bd73ed83"
+    // ];
     const data = {
         "contact": contact,
         "products": products
@@ -250,10 +292,23 @@ async function passerCommande(contact) {
     window.location = `./confirmation.html?orderId=${orderDetails.orderId}`
 }
 
+/**
+ * Crée et renvoie le tableau des Ids des produits dans le panier
+ * @return { Array } listeIdsPanier - Tableau des Ids des produits du panier
+ */
+function recupererListeIdsPanier () {
+    const produitsPanier = recupererPanier();
+    let listeIdsPanier = [];
+    produitsPanier.forEach(element => listeIdsPanier.push(element.id));
+    console.log(listeIdsPanier);
+    return listeIdsPanier;
+}
+recupererListeIdsPanier();
 genererProduits();
 
 document.getElementById("order").type = "button";
 const boutonCommander = document.getElementById("order");
+//Evenement sur le bouton Commander permettant de lancer la vérification du formulaire
 boutonCommander.addEventListener('click', function () {
     validerCommande();
 });

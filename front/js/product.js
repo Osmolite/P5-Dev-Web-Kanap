@@ -1,13 +1,20 @@
+/**
+ * Récupère l'Id et les informations du produit à afficher
+ * @return { Promise }
+ * @return { Promise.resolve<Object> } produitCourant - Objet contenant toutes 
+ * les informations du produit à afficher
+ */
 async function lireProduitCourant() {
-    //Récupération de l'Id du produit à afficher
     const url= new URL(window.location.href);
-    const id= url.searchParams.get("id");
-    //Récupération des informations du produit à afficher dans l'API    
+    const id= url.searchParams.get("id");  
     const reponse = await fetch(`http://localhost:3000/api/products/${id}`);
     const produitCourant = await reponse.json();
     return produitCourant
 }
 
+/**
+ * Affiche toutes les informations du produit désiré sur la page produit
+ */
 async function afficherProduitCourant() {
     const produitCourant = await lireProduitCourant();
     
@@ -42,8 +49,12 @@ async function afficherProduitCourant() {
     
 }
 
+/**
+ * Récupère l'id, la couleur et la quantité pour l'affichage dans le panier
+ * @return { Object } produit - Objet contenant toutes les informations 
+ * pour l'affichage du produit dans le panier
+ */
 function recupererProduit() {
-    //Récupération des informations nécessaire pour l'affichage dans le panier
     const url= new URL(window.location.href);
     const id= url.searchParams.get("id"); 
     const color= document.getElementById("colors").value;
@@ -52,12 +63,20 @@ function recupererProduit() {
     return produit
 }
 
+/**
+ * Limite visuellement la quantité du produit à 100 sur la page produit
+ */
 function verifierQuantiteAffichee() {
-    //Limitation de la quantité du produit à 100 sur l'affichage de la page produit
     if (document.getElementById("quantity").value > 100){
         document.getElementById("quantity").value = 100;
     }
 }
+
+/**
+ * Ajoute le produit désiré au panier, si il est déjà présent, il incrémente juste la quantité
+ * @param { Object } produit - Objet contenant l'id, la couleur et la quantité du produit désiré
+ * @return { Array } produitsPanier - Tableau de tous les produits mis dans le panier par l'utilisateur
+ */
 function ajouterOuIncrementerProduit(produit) {
     //Ajout du nouveau produit ou incrémentation de la quantité (Max 100) du produit déjà existant dans le panier
     const panier = localStorage.getItem("Panier");
@@ -84,21 +103,27 @@ function ajouterOuIncrementerProduit(produit) {
     return produitsPanier
 }
 
+/**
+ * Envoie des produits du panier dans le LocalStorage 
+ * @param { Array } produitsPanier - Tableau de tous les produits mis dans le panier par l'utilisateur
+ */
 function enregistrerPanier(produitsPanier) {
-    //Envoie du panier dans le localStorage
     const panier = JSON.stringify(produitsPanier);
     localStorage.setItem("Panier", panier);
 }
 
+/**
+ * Met à jour le panier avec le nouveau produit désiré dès qu'elle est appelé 
+ * avec le bouton ajouter au panier
+ */
 function ajouterAuPanier() {
-    //Fonction globale qui fait appelle à toutes les autres pour mettre à jour le panier avec le produit désiré
     verifierQuantiteAffichee();
     const produit = recupererProduit();
     const produitsPanier = ajouterOuIncrementerProduit(produit);
     enregistrerPanier(produitsPanier);
     
 }
-//Affichage du produit
+
 afficherProduitCourant();
 
 const boutonPanier = document.getElementById("addToCart");
