@@ -272,24 +272,18 @@ async function validerCommande() {
  */
 async function passerCommande(contact) {
     const products = recupererListeIdsPanier();
-    // const products = [
-    //     "107fb5b75607497b96722bda5b504926",
-    //     "415b7cacb65d43b2b5c1ff70f3393ad1",
-    //     "a557292fe5814ea2b15c6ef4bd73ed83"
-    // ];
     const data = {
         "contact": contact,
         "products": products
     }
-    console.log(data);
     const reponse = await fetch("http://localhost:3000/api/products/order", {
         method: "POST",
         headers: {'Content-Type': 'application/json;charset=utf-8'}, 
         body: JSON.stringify(data)
       })
     const orderDetails= await reponse.json();
-    console.log(orderDetails.orderId);
     window.location = `./confirmation.html?orderId=${orderDetails.orderId}`
+    console.log(orderDetails);
 }
 
 /**
@@ -303,7 +297,6 @@ function recupererListeIdsPanier () {
     console.log(listeIdsPanier);
     return listeIdsPanier;
 }
-recupererListeIdsPanier();
 genererProduits();
 
 document.getElementById("order").type = "button";
