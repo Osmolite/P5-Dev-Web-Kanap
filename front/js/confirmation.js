@@ -11,3 +11,7 @@ function lireOrderId() {
 
 const numeroCommande = document.getElementById("orderId");
 numeroCommande.innerText = lireOrderId();
+
+//On vide le panier une fois que la commande est confirmée
+const panier = JSON.stringify([]);
+localStorage.setItem("Panier", panier);
