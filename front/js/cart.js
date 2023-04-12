@@ -81,7 +81,10 @@ function modifierQuantite(quantiteArticleCourant) {
         if (dataArticle.getAttribute("data-color")===produitDansPanier.couleur
         && dataArticle.getAttribute("data-id")===produitDansPanier.id){
             ancienneQuantite = produitDansPanier.quantite;
-            produitDansPanier.quantite = Math.min(quantiteArticleCourant.value,100); 
+            if (quantiteArticleCourant.value <= 0) {
+                quantiteArticleCourant.value = 1;
+            }
+            produitDansPanier.quantite = Math.min(quantiteArticleCourant.value,100);
             break;
         }
     }
